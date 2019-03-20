@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-find . -name '*.py' | grep -v with_errors  | xargs black --line-length=79 --safe $(ARGS)
+find . -name '*.py' | grep -v with_errors  | xargs black --line-length=79 --safe
 isort --recursive --apply .
 find . -name '*.py' | xargs autoflake --in-place --remove-unused-variables
 flake8 .

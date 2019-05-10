@@ -8,8 +8,15 @@ RUN apk add --no-cache python3 && \
     if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
     rm -r /root/.cache
 
-RUN pip install black flake8 autoflake isort
+RUN pip install black==19.3b0 flake8==3.7.5 autoflake==1.2 isort==4.3.18
 COPY lint /bin/lint
 RUN mkdir /app
+
+
+
+RUN apk add --update nodejs-npm
+RUN npm install --global prettier
+
+
 WORKDIR /app 
 

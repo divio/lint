@@ -1,6 +1,44 @@
 #!/usr/bin/env sh
 
-find . -name '*.py' | grep -v with_errors  | xargs black --line-length=79 --safe
-isort --recursive --apply .
-find . -name '*.py' | xargs autoflake --in-place --remove-unused-variables
-flake8 .
+#LINT_FOLDER_PYTHON
+if [ -z "$LINT_FOLDER_PYTHON" ]
+then
+      echo "\$LINT_FOLDER_PYTHON is not set. Skipping python lint"
+else
+      echo "LINT: ISORT"
+      isort \
+        --recursive \
+        --line-width=79 \
+        --lines-after-imports=2  \
+        --lines-between-types=0 \
+        --trailing-comma \
+        --atomic \
+        --order-by-type \
+        --use-parentheses \
+        --dont-skip=__init__.py \
+        --multi-line=3 \
+        --apply \
+        $LINT_FOLDER_PYTHON
+      echo "LINT: BLACK"
+      find $LINT_FOLDER_PYTHON -name '*.py' | grep -v with_errors  | xargs black --line-length=79 --safe
+      echo "LINT: AUTOFLAKE"
+      find $LINT_FOLDER_PYTHON -name '*.py' | xargs autoflake --in-place --remove-unused-variables
+      echo "LINT: FLAKE8"
+      flake8 $LINT_FOLDER_PYTHON --ignore=E501,E722,E402,W503,E203
+fi
+
+if [ -z "$LINT_FOLDER_SCSS" ]
+then
+      echo "\$LINT_FOLDER_SCSS is not set. Skipping python lint"
+else
+      echo "LINT: PRETTIER: SCSS"
+      prettier $LINT_FOLDER_SCSS --write --parser scss --double-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120
+fi
+
+if [ -z "$LINT_FOLDER_JS" ]
+then
+      echo "\$LINT_FOLDER_JS is not set. Skipping python lint"
+else
+      echo "LINT: PRETTIER: JS"
+      prettier $LINT_FOLDER_JS --write --parser flow --single-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120
+fi

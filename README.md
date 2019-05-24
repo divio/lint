@@ -12,6 +12,7 @@ Docker-packaged linting tools
    alias lint="docker run -it --env-file=.lint -v $(pwd):/app divio/lint /bin/lint"
 
    lint
+   lint --check
 
 ```
 
@@ -19,7 +20,13 @@ Docker-packaged linting tools
 ## Using it with make
 ```
 lint:
-	docker run -it  --env-file=.lint -v $(CURDIR):/app divio/lint /bin/lint
+	docker run -it  --env-file=.lint -v $(CURDIR):/app divio/lint /bin/lint ${ARGS}
+```
+
+```
+
+   make lint
+   ARGS=--check make lint
 ```
 
 Remember, you can specify differnt  env-files instead of `.lint`

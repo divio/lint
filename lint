@@ -1,44 +1,103 @@
 #!/usr/bin/env sh
+set -e
+
+check=
+while [ "$1" != "" ]; do
+      case $1 in
+            -c | --check )    check=1
+                              ;;
+        
+            * )               echo "I don't know this option"
+                              exit 1
+      esac
+      shift
+done
+
+
+if [ -z ${check} ];  then
+      echo "linting..."
+else
+      echo "checking..."
+fi
+
+
 
 #LINT_FOLDER_PYTHON
 if [ -z "$LINT_FOLDER_PYTHON" ]
 then
-      echo "\$LINT_FOLDER_PYTHON is not set. Skipping python lint"
+      echo "\$LINT_FOLDER_PYTHON is not set. Skipping..."
 else
       echo "LINT: ISORT"
-      isort \
-        --recursive \
-        --line-width=79 \
-        --lines-after-imports=2  \
-        --lines-between-types=0 \
-        --trailing-comma \
-        --atomic \
-        --order-by-type \
-        --use-parentheses \
-        --dont-skip=__init__.py \
-        --multi-line=3 \
-        --apply \
-        $LINT_FOLDER_PYTHON
+      if [ -z ${check} ];  then
+            isort \
+            --recursive \
+            --line-width=79 \
+            --lines-after-imports=2  \
+            --lines-between-types=0 \
+            --trailing-comma \
+            --atomic \
+            --order-by-type \
+            --use-parentheses \
+            --dont-skip=__init__.py \
+            --multi-line=3 \
+            --apply \
+            $LINT_FOLDER_PYTHON
+      else
+            isort \
+            --recursive \
+            --line-width=79 \
+            --lines-after-imports=2  \
+            --lines-between-types=0 \
+            --trailing-comma \
+            --atomic \
+            --order-by-type \
+            --use-parentheses \
+            --dont-skip=__init__.py \
+            --multi-line=3 \
+            --apply \
+            --check-only \
+            $LINT_FOLDER_PYTHON
+
+      fi
       echo "LINT: BLACK"
-      find $LINT_FOLDER_PYTHON -name '*.py' | grep -v with_errors  | xargs black --line-length=79 --safe
+      if [ -z ${check} ];  then
+            find $LINT_FOLDER_PYTHON -name '*.py' | grep -v with_errors  | xargs black --line-length=79 --safe
+      else
+            find $LINT_FOLDER_PYTHON -name '*.py' | grep -v with_errors  | xargs black --line-length=79 --safe --check
+      fi
       echo "LINT: AUTOFLAKE"
-      find $LINT_FOLDER_PYTHON -name '*.py' | xargs autoflake --in-place --remove-unused-variables
+      if [ -z ${check} ];  then
+            find $LINT_FOLDER_PYTHON -name '*.py' | xargs autoflake --in-place --remove-unused-variables
+      else
+            echo "not running autoflake on check"
+      fi
       echo "LINT: FLAKE8"
       flake8 $LINT_FOLDER_PYTHON --ignore=E501,E722,E402,W503,E203
 fi
 
 if [ -z "$LINT_FOLDER_SCSS" ]
 then
-      echo "\$LINT_FOLDER_SCSS is not set. Skipping python lint"
+      echo "\$LINT_FOLDER_SCSS is not set. Skipping..."
 else
       echo "LINT: PRETTIER: SCSS"
-      prettier $LINT_FOLDER_SCSS --write --parser scss --double-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120
+      if [ -z ${check} ];  then
+            prettier $LINT_FOLDER_SCSS --write --parser scss --double-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120
+      else
+            prettier $LINT_FOLDER_SCSS --write --parser scss --double-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120 --check
+      
+      fi
 fi
 
 if [ -z "$LINT_FOLDER_JS" ]
 then
-      echo "\$LINT_FOLDER_JS is not set. Skipping python lint"
+      echo "\$LINT_FOLDER_JS is not set. Skipping..."
 else
       echo "LINT: PRETTIER: JS"
-      prettier $LINT_FOLDER_JS --write --parser flow --single-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120
+      if [ -z ${check} ];  then
+            prettier $LINT_FOLDER_JS --write --parser flow --single-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120
+      else
+            prettier $LINT_FOLDER_JS --write --parser flow --single-quote --trailing-comma es5 --jsx-bracket-same-line --tab-width 4 --print-width 120 --check
+      fi
 fi
+
+

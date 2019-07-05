@@ -20,7 +20,14 @@ else
       echo "checking..."
 fi
 
-
+#LINT_FOLDER_PYTHON
+if [ -z "$LINT_FILE_DOCKER" ]
+then
+      echo "\$LINT_FILE_DOCKER is not set. Skipping..."
+else
+      echo "LINT: DOCKER"
+      hadolint $LINT_FILE_DOCKER
+fi
 
 #LINT_FOLDER_PYTHON
 if [ -z "$LINT_FOLDER_PYTHON" ]

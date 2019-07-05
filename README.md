@@ -33,6 +33,7 @@ Remember, you can specify differnt  env-files instead of `.lint`
 
 ## environment variales we are going to need
 ```
+LINT_FILE_DOCKER=/app/Dockerfile
 LINT_FOLDER_PYTHON=/app/src
 LINT_FOLDER_SCSS=/app/private/sass/**/*.scss
 LINT_FOLDER_JS=/app/static/js/**/*.js

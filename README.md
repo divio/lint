@@ -9,7 +9,7 @@ Docker-packaged linting tools
 
 ## Using it in bash
 ```
-   alias lint="docker run -it --env-file=.lint -v $(pwd):/app divio/lint /bin/lint"
+   alias lint="docker run --rm -it --env-file=.lint -v $(pwd):/app divio/lint /bin/lint"
 
    lint
    lint --check
@@ -20,7 +20,7 @@ Docker-packaged linting tools
 ## Using it with make
 ```
 lint:
-	docker run -it  --env-file=.lint -v $(CURDIR):/app divio/lint /bin/lint ${ARGS}
+	docker run -it --rm --env-file=.lint -v $(CURDIR):/app divio/lint /bin/lint ${ARGS}
 ```
 
 ```

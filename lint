@@ -4,7 +4,7 @@ set -e
 check=
 staged=
 while [ "$1" != "" ]; do
-      case $1 in
+      case "$1" in
             -c | --check )    check=1
                               ;;
 
@@ -12,14 +12,14 @@ while [ "$1" != "" ]; do
                               check=1
                               ;;
 
-            * )               echo "I don't know this option"
+            * )               echo "I don't know this option: $1"
                               exit 1
       esac
       shift
 done
 
 
-if [ -z ${check} ];  then
+if [ -z "${check}" ];  then
       echo "linting..."
 else
       echo "checking..."
@@ -55,7 +55,7 @@ then
       echo "\$LINT_FOLDER_PYTHON is not set. Skipping..."
 else
       echo "LINT: ISORT"
-      if [ -z ${check} ];  then
+      if [ -z "${check}" ];  then
             ISORT_OPTS=--apply
       else
             ISORT_OPTS="--check-only --diff"
@@ -77,9 +77,7 @@ else
 
       echo "LINT: BLACK"
       BLACK_OPTS=
-      if [ -z ${check} ];  then
-            BLACK_OPTS=
-      else
+      if [ -n "${check}" ];  then
             BLACK_OPTS=--check
       fi
       find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
@@ -87,7 +85,7 @@ else
             | xargs black --line-length=79 --safe $BLACK_OPTS
 
       echo "LINT: AUTOFLAKE"
-      if [ -z ${check} ];  then
+      if [ -z "${check}" ];  then
             find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
                   | xargs autoflake --in-place --remove-unused-variables
       else
@@ -104,7 +102,7 @@ then
 elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
       echo "LINT: PRETTIER: SCSS"
       PRETTIER_OPTS=--write
-      if [ -n ${check} ];  then
+      if [ -n "${check}" ];  then
             PRETTIER_OPTS=--check
       fi
       prettier \
@@ -126,7 +124,7 @@ then
 elif node_check_pattern "$PREFIX$LINT_FOLDER_JS"; then
       echo "LINT: PRETTIER: JS"
       PRETTIER_OPTS=--write
-      if [ -n ${check} ];  then
+      if [ -n "${check}" ];  then
             PRETTIER_OPTS=--check
       fi
       prettier \

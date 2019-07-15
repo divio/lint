@@ -107,7 +107,6 @@ elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
       fi
       prettier \
             --parser scss \
-            --double-quote \
             --trailing-comma es5 \
             --jsx-bracket-same-line \
             --tab-width 4 \

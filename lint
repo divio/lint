@@ -3,21 +3,29 @@ set -e
 
 check=
 staged=
+run='all'
 while [ "$1" != "" ]; do
-      case "$1" in
-            -c | --check )    check=1
-                              ;;
+    PARAM=`echo $1 | awk -F= '{print $1}'`
+    VALUE=`echo $1 | awk -F= '{print $2}'`
 
-            --staged )        staged=1
-                              check=1
-                              ;;
+    case $PARAM in
+        -c | --check )    check=1
+                          ;;
 
-            * )               echo "I don't know this option: $1"
-                              exit 1
-      esac
-      shift
+        --staged )        staged=1
+                          check=1
+                          ;;
+
+        --run )           run=$VALUE
+                          ;;
+
+        * )               echo "I don't know this option: $1"
+                          exit 1
+    esac
+    shift
 done
 
+echo "Running $run"
 
 if [ -z "${check}" ];  then
       echo "linting..."
@@ -33,6 +41,8 @@ if [ -n "${staged}" ]; then
             | git checkout-index --prefix="$PREFIX" -z --stdin
 fi
 
+includes() { [ -z "$2" ] || { [ -z "${1##*$2*}" ] && [ -n "$1" ];};}
+
 # This piece of work is necessary because prettier fails if the patterns
 # that it receives as arguments do not match any files.
 function node_check_pattern () {
@@ -42,6 +52,7 @@ function node_check_pattern () {
 }
 
 
+if [ "$run" == "all" ] || includes "$run" "docker"; then
 if [ -z "$LINT_FILE_DOCKER" ]
 then
       echo "\$LINT_FILE_DOCKER is not set. Skipping..."
@@ -49,7 +60,9 @@ else
       echo "LINT: DOCKER"
       hadolint $LINT_FILE_DOCKER
 fi
+fi
 
+if [ "$run" == "all" ] || includes "$run" "python"; then
 if [ -z "$LINT_FOLDER_PYTHON" ]
 then
       echo "\$LINT_FOLDER_PYTHON is not set. Skipping..."
@@ -95,10 +108,14 @@ else
       echo "LINT: FLAKE8"
       flake8 "$PREFIX$LINT_FOLDER_PYTHON" --ignore=E501,E722,E402,W503,E203
 fi
+fi
 
+if [ "$run" == "all" ] || includes "$run" "scss"; then
 if [ -z "$LINT_FOLDER_SCSS" ]
 then
       echo "\$LINT_FOLDER_SCSS is not set. Skipping..."
+elif [ ! -f ".prettierrc" ]; then
+      echo ".prettierrc does not exist. Skipping..."
 elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
       echo "LINT: PRETTIER: SCSS"
       PRETTIER_OPTS=--write
@@ -106,20 +123,19 @@ elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
             PRETTIER_OPTS=--check
       fi
       prettier \
-            --parser scss \
-            --trailing-comma es5 \
-            --jsx-bracket-same-line \
-            --tab-width 4 \
-            --print-width 120 \
             $PRETTIER_OPTS \
             "$PREFIX$LINT_FOLDER_SCSS"
 else
       echo "$PREFIX$LINT_FOLDER_SCSS did not match any files, skipping..."
 fi
+fi
 
+if [ "$run" == "all" ] || includes "$run" "js"; then
 if [ -z "$LINT_FOLDER_JS" ]
 then
       echo "\$LINT_FOLDER_JS is not set. Skipping..."
+elif [ ! -f ".prettierrc" ]; then
+      echo ".prettierrc does not exist. Skipping..."
 elif node_check_pattern "$PREFIX$LINT_FOLDER_JS"; then
       echo "LINT: PRETTIER: JS"
       PRETTIER_OPTS=--write
@@ -127,14 +143,9 @@ elif node_check_pattern "$PREFIX$LINT_FOLDER_JS"; then
             PRETTIER_OPTS=--check
       fi
       prettier \
-            --parser flow \
-            --single-quote \
-            --trailing-comma es5 \
-            --jsx-bracket-same-line \
-            --tab-width 4 \
-            --print-width 120 \
             $PRETTIER_OPTS \
             "$PREFIX$LINT_FOLDER_JS"
 else
       echo "$PREFIX$LINT_FOLDER_JS did not match any files, skipping..."
+fi
 fi

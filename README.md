@@ -13,6 +13,7 @@ Docker-packaged linting tools
 
    lint
    lint --check
+   lint --run=js,python
 
 ```
 
@@ -27,6 +28,7 @@ lint:
 
    make lint
    ARGS=--check make lint
+   ARGS="--run=js,scss" make lint
 ```
 
 Remember, you can specify different  env-files instead of `.lint`

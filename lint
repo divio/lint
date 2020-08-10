@@ -73,7 +73,9 @@ else
       else
             ISORT_OPTS="--check-only --diff"
       fi
-      isort \
+      find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
+            | grep -v with_errors \
+            | xargs isort \
             --settings-path=/app \
             --recursive \
             --line-width=79 \
@@ -86,7 +88,6 @@ else
             --dont-skip=__init__.py \
             --multi-line=3 \
             $ISORT_OPTS \
-            "$PREFIX$LINT_FOLDER_PYTHON"
 
       echo "LINT: BLACK"
       BLACK_OPTS=

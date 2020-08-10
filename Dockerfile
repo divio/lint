@@ -4,7 +4,8 @@ FROM alpine:3.9
 RUN wget https://github.com/hadolint/hadolint/releases/download/v1.17.1/hadolint-Linux-x86_64 -O /bin/hadolint
 RUN chmod 777 /bin/hadolint
 
-RUN apk add --no-cache nodejs-npm==10.14.2-r0 python3==3.6.9-r2 git==2.20.2-r0
+# update versions from https://pkgs.alpinelinux.org/packages
+RUN apk add --no-cache npm==10.19.0-r0 python3==3.6.9-r3 git==2.20.4-r0
 RUN python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip
 RUN pip3 install --upgrade pip==18.1 setuptools==40.6.2

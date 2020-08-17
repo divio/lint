@@ -115,8 +115,6 @@ if [ "$run" == "all" ] || includes "$run" "scss"; then
 if [ -z "$LINT_FOLDER_SCSS" ]
 then
       echo "\$LINT_FOLDER_SCSS is not set. Skipping..."
-elif [ ! -f ".prettierrc" ]; then
-      echo ".prettierrc does not exist. Skipping..."
 elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
       echo "LINT: PRETTIER: SCSS"
       PRETTIER_OPTS=--write
@@ -124,6 +122,13 @@ elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
             PRETTIER_OPTS=--check
       fi
       prettier \
+            --no-config \
+            --print-width=80 \
+            --tab-width=2 \
+            --arrow-parens=avoid \
+            --trailing-comma=es5 \
+            --single-quote \
+            --jsx-bracket-same-line \
             $PRETTIER_OPTS \
             "$PREFIX$LINT_FOLDER_SCSS"
 else
@@ -135,8 +140,6 @@ if [ "$run" == "all" ] || includes "$run" "js"; then
 if [ -z "$LINT_FOLDER_JS" ]
 then
       echo "\$LINT_FOLDER_JS is not set. Skipping..."
-elif [ ! -f ".prettierrc" ]; then
-      echo ".prettierrc does not exist. Skipping..."
 elif node_check_pattern "$PREFIX$LINT_FOLDER_JS"; then
       echo "LINT: PRETTIER: JS"
       PRETTIER_OPTS=--write
@@ -144,6 +147,13 @@ elif node_check_pattern "$PREFIX$LINT_FOLDER_JS"; then
             PRETTIER_OPTS=--check
       fi
       prettier \
+            --no-config \
+            --print-width=80 \
+            --tab-width=2 \
+            --arrow-parens=avoid \
+            --trailing-comma=es5 \
+            --single-quote \
+            --jsx-bracket-same-line \
             $PRETTIER_OPTS \
             "$PREFIX$LINT_FOLDER_JS"
 else

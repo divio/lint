@@ -75,7 +75,7 @@ else
       fi
       find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
             | grep -v with_errors \
-            | xargs isort \
+            | xargs -r isort \
             --settings-path=/app \
             --recursive \
             --line-width=79 \
@@ -96,12 +96,12 @@ else
       fi
       find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
             | grep -v with_errors \
-            | xargs black --line-length=79 --safe $BLACK_OPTS
+            | xargs -r black --line-length=79 --safe $BLACK_OPTS
 
       echo "LINT: AUTOFLAKE"
       if [ -z "${check}" ];  then
             find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
-                  | xargs autoflake --in-place --remove-unused-variables
+                  | xargs -r autoflake --in-place --remove-unused-variables
       else
             echo "not running autoflake on check"
       fi

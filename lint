@@ -68,16 +68,13 @@ then
       echo "\$LINT_FOLDER_PYTHON is not set. Skipping..."
 else
       echo "LINT: ISORT"
-      if [ -z "${check}" ];  then
-            ISORT_OPTS=--apply
-      else
+      if [ "${check}" ];  then
             ISORT_OPTS="--check-only --diff"
       fi
       find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
             | grep -v with_errors \
             | xargs -r isort \
             --settings-path=/app \
-            --recursive \
             --line-width=79 \
             --lines-after-imports=2  \
             --lines-between-types=0 \
@@ -85,7 +82,6 @@ else
             --atomic \
             --order-by-type \
             --use-parentheses \
-            --dont-skip=__init__.py \
             --multi-line=3 \
             $ISORT_OPTS \
 

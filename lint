@@ -103,7 +103,11 @@ else
       fi
 
       echo "LINT: FLAKE8"
-      flake8 "$PREFIX$LINT_FOLDER_PYTHON" --ignore=E501,E722,E402,W503,E203
+      if [ -d "$PREFIX$LINT_FOLDER_PYTHON" ]; then
+            flake8 "$PREFIX$LINT_FOLDER_PYTHON" --ignore=E501,E722,E402,W503,E203
+      else
+            echo "Skipping, nothing to check."
+      fi
 fi
 fi
 

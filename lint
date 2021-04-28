@@ -51,6 +51,16 @@ function node_check_pattern () {
                   "$@"
 }
 
+function list_python_files() {
+    find "$PREFIX$LINT_FOLDER_PYTHON" \
+        \( -name .tox -o -name .eggs \) -prune \
+        -o \
+            -type f \
+            -not -path '*with_errors*' \
+            -name '*.py' \
+            -print
+}
+
 
 if [ "$run" == "all" ] || includes "$run" "docker"; then
 if [ -z "$LINT_FILE_DOCKER" ]
@@ -71,10 +81,8 @@ else
       if [ "${check}" ];  then
             ISORT_OPTS="--check-only --diff"
       fi
-      find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
-            | grep -v with_errors \
-            | xargs -r isort \
-            --settings-path=/app \
+      list_python_files | xargs -r isort \
+            --settings-path=. \
             --line-width=79 \
             --lines-after-imports=2  \
             --lines-between-types=0 \
@@ -90,14 +98,11 @@ else
       if [ -n "${check}" ];  then
             BLACK_OPTS=--check
       fi
-      find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
-            | grep -v with_errors \
-            | xargs -r black --line-length=79 --safe $BLACK_OPTS
+      list_python_files | xargs -r black --line-length=79 --safe $BLACK_OPTS
 
       echo "LINT: AUTOFLAKE"
       if [ -z "${check}" ];  then
-            find "$PREFIX$LINT_FOLDER_PYTHON" -name '*.py' \
-                  | xargs -r autoflake --in-place --remove-unused-variables
+            list_python_files | xargs -r autoflake --in-place --remove-unused-variables
       else
             echo "not running autoflake on check"
       fi

@@ -18,6 +18,6 @@ RUN pip install black==20.8b1 flake8==3.8.4 autoflake==1.4 isort==5.6.4
 RUN npm install --global prettier@2.0.4 globby@6.1.0
 
 RUN mkdir /app
-WORKDIR /app 
+WORKDIR /app
 
 COPY lint /bin/lint

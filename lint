@@ -82,6 +82,7 @@ else
             ISORT_OPTS="--check-only --diff"
       fi
       list_python_files | xargs -r isort \
+            --settings-path=. \
             --line-width=79 \
             --lines-after-imports=2  \
             --lines-between-types=0 \

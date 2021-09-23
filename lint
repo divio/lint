@@ -80,6 +80,9 @@ else
       echo "LINT: ISORT"
       if [ "${check}" ];  then
             ISORT_OPTS="--check-only --diff"
+      else
+            # Prevents file ownership changes on change
+            ISORT_OPTS="--overwrite-in-place"
       fi
       list_python_files | xargs -r isort \
             --settings-path=. \

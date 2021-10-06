@@ -91,6 +91,7 @@ else
             --order-by-type \
             --use-parentheses \
             --multi-line=3 \
+            --overwrite-in-place \
             $ISORT_OPTS \
 
       echo "LINT: BLACK"

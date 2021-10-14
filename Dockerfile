@@ -14,7 +14,7 @@ RUN ln -s pip3 /usr/bin/pip && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     rm -r /root/.cache
 
-RUN pip install black==20.8b1 flake8==3.8.4 autoflake==1.4 isort==5.9.3
+RUN pip install black==20.8b1 flake8==3.9.2 autoflake==1.4 isort==5.9.3
 RUN npm install --global prettier@2.0.4 globby@6.1.0
 
 RUN mkdir /app

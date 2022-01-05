@@ -134,7 +134,7 @@ elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
             --arrow-parens=avoid \
             --trailing-comma=es5 \
             --single-quote \
-            --jsx-bracket-same-line \
+            --bracket-same-line \
             $PRETTIER_OPTS \
             "$PREFIX$LINT_FOLDER_SCSS"
 else
@@ -159,7 +159,7 @@ elif node_check_pattern "$PREFIX$LINT_FOLDER_JS"; then
             --arrow-parens=avoid \
             --trailing-comma=es5 \
             --single-quote \
-            --jsx-bracket-same-line \
+            --bracket-same-line \
             $PRETTIER_OPTS \
             "$PREFIX$LINT_FOLDER_JS"
 else

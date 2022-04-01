@@ -13,7 +13,7 @@ RUN pip3 install --upgrade pip==21.3.1 setuptools==60.2.0
 RUN ln -sf /usr/bin/python3 /usr/bin/python && \
     rm -r /root/.cache
 
-RUN pip install black==22.1.0 flake8==4.0.1 autoflake==1.4 isort==5.10.1
+RUN pip install black==22.3.0 flake8==4.0.1 autoflake==1.4 isort==5.10.1
 RUN npm install --global prettier@2.5.1 globby@12.0.2
 
 RUN mkdir /app

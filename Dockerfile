@@ -5,7 +5,8 @@ RUN wget https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-
 RUN chmod 777 /bin/hadolint
 
 # update versions from https://pkgs.alpinelinux.org/packages
-RUN apk add --no-cache npm==8.1.3-r0 python3==3.9.7-r4 git==2.34.1-r0 gcc python3-dev musl-dev
+RUN apk add --no-cache npm==8.1.3-r0 python3==3.9.16-r0 git==2.34.7-r0 gcc python3-dev musl-dev
+
 RUN python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip
 RUN pip3 install --upgrade pip==21.3.1 setuptools==60.2.0

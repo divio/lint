@@ -77,23 +77,6 @@ if [ -z "$LINT_FOLDER_PYTHON" ]
 then
       echo "\$LINT_FOLDER_PYTHON is not set. Skipping..."
 else
-      echo "LINT: ISORT"
-      if [ "${check}" ];  then
-            ISORT_OPTS="--check-only --diff"
-      fi
-      list_python_files | xargs -r isort \
-            --settings-path=. \
-            --line-width=79 \
-            --lines-after-imports=2  \
-            --lines-between-types=0 \
-            --trailing-comma \
-            --atomic \
-            --order-by-type \
-            --use-parentheses \
-            --multi-line=3 \
-            --overwrite-in-place \
-            $ISORT_OPTS \
-
       echo "LINT: BLACK"
       BLACK_OPTS=
       if [ -n "${check}" ];  then
@@ -101,19 +84,13 @@ else
       fi
       list_python_files | xargs -r black --line-length=79 --safe $BLACK_OPTS
 
-      echo "LINT: AUTOFLAKE"
-      if [ -z "${check}" ];  then
-            list_python_files | xargs -r autoflake --in-place --remove-unused-variables
-      else
-            echo "not running autoflake on check"
+      echo "LINT: RUFF"
+      ruff_args="--fix --show-fixes"
+      if [ -n "${check}" ];  then
+            ruff_args=""
+            echo "ruff auto-fix disabled."
       fi
-
-      echo "LINT: FLAKE8"
-      if [ -d "$PREFIX$LINT_FOLDER_PYTHON" ]; then
-            flake8 "$PREFIX$LINT_FOLDER_PYTHON" --ignore=E501,E722,E402,W503,E203
-      else
-            echo "Skipping, nothing to check."
-      fi
+      ruff check $ruff_args "$PREFIX$LINT_FOLDER_PYTHON" && echo "Success!"
 fi
 fi
 

@@ -1,0 +1,16 @@
+line-length = 79
+select = [
+    'E',
+    'F',
+    'W',
+    'I',
+]
+extend-exclude = ["*with_errors*"]
+ignore = [
+    "E501", "E722", "E402"
+]
+
+[isort]
+lines-after-imports = 2
+lines-between-types = 0
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]

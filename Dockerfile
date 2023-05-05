@@ -1,7 +1,11 @@
 FROM alpine:3.15
 
+# BUILDARCH will be: linux/amd64 => amd64, linux/arm64, linx/arm/v7, ... => arm64
+ARG BUILDARCH
+ARG HADOLINT_VERSION=v2.12.0
 
-RUN wget https://github.com/hadolint/hadolint/releases/download/v2.8.0/hadolint-Linux-x86_64 -O /bin/hadolint
+RUN export DISTRIB=$(case "$BUILDARCH" in amd64) echo "x86_64";; arm64) echo "arm64";; *) echo "Unsupported architecture $BUILDARCH" && exit 1;; esac) \
+  && wget https://github.com/hadolint/hadolint/releases/download/${HADOLINT_VERSION}/hadolint-Linux-$DISTRIB -O /bin/hadolint
 RUN chmod 777 /bin/hadolint
 
 # update versions from https://pkgs.alpinelinux.org/packages

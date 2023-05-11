@@ -3,9 +3,46 @@
 Docker-packaged linting tools
 
 ## Build the docker image
+
+This image needs to support both AMD and ARM.
+
+**development**
+
+During development, use (tip - use `make -n` to see the command without running it):
+```bash
+# Build for amd64
+make build
+# Build for arm64
+make build TARGET=arm64
 ```
-   docker build . --tag divio/lint
+
+Don't forget to test both platforms (`docker run ...`)!
+
+Once you know it works for both platforms, you can build a multi-arch image using
+buildkit.
+
+First, create a builder if you haven't done so already (check with `docker buildx ls`):
+```bash
+# create a builder. Run this only once!
+docker buildx create --name builder
+
+# use the builder
+docker buildx use builder
 ```
+
+Once you have the builder selected, you can run the following:
+```bash
+# Test the build
+make build_multiarch
+```
+
+If all seems fine, it is time to push to DockerHub using:
+```bash
+# Push. Don't forget to set the proper version!
+make push_multiarch VERSION=0.7
+```
+
+You can now go back to the "default" builder by running: `docker buildx use default`.
 
 ## Using it in bash
 ```

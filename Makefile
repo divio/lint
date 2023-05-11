@@ -17,4 +17,4 @@ build_multiarch:  ## Build the multi-arch image
 
 push_multiarch:  ## push the image to DockerHub
 	@if [ "${VERSION}" == "" ]; then echo "VERSION is required"; exit 1; fi
-	make -n build_multiarch ARGS="--tag ${NAME}:${VERSION} --push"
+	make build_multiarch ARGS="--tag ${NAME}:${VERSION} --push"

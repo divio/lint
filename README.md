@@ -36,13 +36,14 @@ Once you have the builder selected, you can run the following:
 make build_multiarch
 ```
 
-If all seems fine, it is time to push to DockerHub using:
-```bash
-# Push. Don't forget to set the proper version!
-make push_multiarch VERSION=0.7
-```
+If all seems fine, it is time to release and push to DockerHub.
+Create a new tag with the version (e.g. `0.8`) and push (`git push --tags`).
+The GitLab pipeline will do the rest (see `.gitlab-ci.yml` for more info).
 
 You can now go back to the "default" builder by running: `docker buildx use default`.
+
+
+(**NOTE**: you can also manually push to DockerHub, but this is **NOT** recommended: `make push_multiarch VERSION=0.7`).
 
 ## Using it in bash
 ```

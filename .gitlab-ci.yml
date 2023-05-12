@@ -1,0 +1,85 @@
+image: docker:stable
+
+include:
+  - project: divio/infra/gitlab-pipelines
+    ref: master
+    file: base/.gitlab-ci.yml
+
+variables:
+  LINT_FILE_DOCKER: Dockerfile
+  BUILDX_VERSION: v0.10.4
+  PUBLIC_REPOSITORY: divio/lint
+  BUILDX_ARCH: linux-amd64
+  BUILDX_URL: https://github.com/docker/buildx/releases/download/${BUILDX_VERSION}/buildx-${BUILDX_VERSION}.${BUILDX_ARCH}
+
+.setup-docker: &setup_docker_builder |-
+    mkdir -p /usr/libexec/docker/cli-plugins
+    wget -q -O /usr/libexec/docker/cli-plugins/docker-buildx ${BUILDX_URL}
+    chmod +x /usr/libexec/docker/cli-plugins/docker-buildx
+    docker buildx version
+
+    docker buildx create --use
+    docker login -u ${CI_REGISTRY_USER} -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+
+    apk add --no-cache make
+
+
+build:
+  stage: build
+  needs: []
+  before_script:
+    - *setup_docker_builder
+  script:
+    - make build_multiarch NAME=$CI_REGISTRY_IMAGE/build TAG=${CI_PIPELINE_IID} ARGS="--push"
+  except:
+    - tags
+
+# Use the image we just built for the linting, two birds one stone!
+linting:
+  image: $CI_REGISTRY_IMAGE/build:${CI_PIPELINE_IID}
+  needs:
+    - build
+  except:
+    - tags
+
+build-prod:
+  stage: build
+  needs: []
+  before_script:
+    - *setup_docker_builder
+  script:
+    - make build_multiarch NAME=${CI_REGISTRY_IMAGE} TAG=${CI_COMMIT_TAG} ARGS="--push"
+  only:
+    - tags
+
+release:
+  stage: release
+  needs:
+    - build-prod
+  image:
+    name: ananace/skopeo
+    entrypoint: [""]
+  variables:
+    GIT_STRATEGY: none
+    IMAGE_NAME: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
+    PRIVATE_REGISTRY_CREDS: ${CI_REGISTRY_USER}:${CI_JOB_TOKEN}
+    PUBLIC_REGISTRY_CREDS: ${DOCKER_HUB_USER}:${DOCKER_HUB_TOKEN}
+  script:
+    - >
+      /skopeo
+      copy
+      --multi-arch all
+      --src-creds=${PRIVATE_REGISTRY_CREDS}
+      --dest-creds=${PUBLIC_REGISTRY_CREDS}
+      docker://${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
+      docker://${PUBLIC_REPOSITORY}:${CI_COMMIT_TAG}
+    - >
+      /skopeo
+      copy
+      --multi-arch all
+      --src-creds=${PUBLIC_REGISTRY_CREDS}
+      --dest-creds=${PUBLIC_REGISTRY_CREDS}
+      docker://${PUBLIC_REPOSITORY}:${CI_COMMIT_TAG}
+      docker://${PUBLIC_REPOSITORY}:latest
+  only:
+    - tags

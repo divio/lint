@@ -57,6 +57,7 @@ function list_python_files() {
         -o \
             -type f \
             -not -path '*with_errors*' \
+            -not -path './.venv/*' \
             -name '*.py' \
             -print
 }

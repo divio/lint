@@ -1,16 +1,136 @@
 line-length = 79
+
+target-version = "py311" # Default python version
+
+# To test and work on: eradicate (ERA) - we need to work on it to be able to keep some comments.
+# To activate later: 'SIM', 'PTH', 'PLR', 'G', 'ARG', 'PLW2901'
 select = [
-    'E',
-    'F',
-    'W',
-    'I',
+    'F',    # Pyflakes
+    'E',    # Error
+    'W',    # Warning
+    'I',    # Isort
+    'UP',   # pyupgrade
+    'YTT',  # flake8-2020 (usage of sys package)
+    'S101', # assert used (ignored for tests, see below)
+    'B',    # flake8-bugbear 
+    # 'A', we often have models with id, list, etc.
+    # 'COM', conflicts with black
+    'C4',  # flake8-comprehensions 
+    'T10', # flake8-debugger
+    # 'DJ', null TextField, no __str__ on model
+    'EXE', # flake8-executable
+    'FA',  # flake8-future-annotations
+    'ISC', # flake8-implicit-str-concat
+    'PIE', # flake8-pie (misc lints)
+    'T20', # flake8-print
+    'PT',  # flake8-pytest-style
+    # 'Q', redundant with black
+    'RSE', # flake8-raise
+    'RET', # flake8-return
+    #'SLF', we use model._meta too often
+    'PLE', # pylint ('E' subset)
+    'PLW', # pylint ('W' subset)
+    'FLY', # static join to f-string 
+    'RUF', # ruff miscellanous lints
+
+
 ]
-extend-exclude = ["*with_errors*"]
+exclude = ["/*with_errors*", "/**/.venv"]
 ignore = [
-    "E501", "E722", "E402"
+    "E501",    # line too long
+    "E722",    # bare except
+    "E402",    # module level import not at top of file
+    "B904",    # raise-without-from-inside-except
+    "RET505",  # superfluous else return
+    "PLW2901", # redefined loop name
+    "RUF012",  # mutable class default
+    "B017",    # pytest.raises exception considered evil
+    "PT011",   # pytest.raises too broad
 ]
+
+[per-file-ignores]
+# The pre-file-ignores paths are resolved relative to
+# the location of ruff.toml!
+# See https://github.com/astral-sh/ruff/issues/6480
+"/**/test/**" = ["S101"]
+"/**/tests/**" = ["S101"]
+"/**/conftest.py" = ["S101"]
+"/**/test_*.py" = ["S101"]
 
 [isort]
 lines-after-imports = 2
 lines-between-types = 0
-section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "drf",
+    "aws",
+    "azure",
+    "third-party",
+    "first-party",
+    "project",
+    "divio",
+    "local-folder",
+]
+known-first-party = ["conftest", "test_utils", "version"] # Control Panel
+
+[isort.sections]
+django = ["django", "django_extensions"]
+drf = ["rest_framework"]
+aws = ["boto3", "botocore"]
+azure = ["azure", "msrestazure"]
+divio = ["divio"]
+project = [
+    # Services API
+    "services",
+    # App Controller
+    "app_controller",
+    # Control Panel
+    "accounts",
+    "annotations",
+    "api",
+    "apps",
+    "asynchronous_tasks",
+    "backups",
+    "backing_services",
+    "baseproject",
+    "billing",
+    "boilerplates",
+    "bundle_io",
+    "celeryapp",
+    "commandcenter",
+    "control",
+    "cronjobs",
+    "currencies",
+    "dbapi",
+    "demo",
+    "deploy",
+    "domains",
+    "god",
+    "google_api",
+    "graphql_tests",
+    "harvest_api",
+    "harvest_export",
+    "http_callbacks",
+    "impersonate",
+    "intercom_api",
+    "licenses",
+    "login",
+    "login_saml",
+    "maintenance",
+    "network",
+    "notifications",
+    "product_changes",
+    "project",
+    "project_creation",
+    "repositories",
+    "s3_storage",
+    "sharing",
+    "statistics",
+    "statistics_reporting",
+    "tests",
+    "tracking",
+    "tutorial",
+    "tweet",
+]

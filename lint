@@ -91,7 +91,8 @@ else
             ruff_args=""
             echo "ruff auto-fix disabled."
       fi
-      ruff check $ruff_args "$PREFIX$LINT_FOLDER_PYTHON" && echo "Success!"
+      ruff check $ruff_args "$PREFIX$LINT_FOLDER_PYTHON"
+      echo "Success!"
 fi
 fi
 

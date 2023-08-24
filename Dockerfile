@@ -18,7 +18,7 @@ RUN python3 -m ensurepip && \
     rm -r /usr/lib/python*/ensurepip && \
     pip3 install --no-cache-dir --upgrade pip setuptools && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
-    pip install --no-cache-dir black==22.3.0 ruff==0.0.263 && \
+    pip install --no-cache-dir black==22.3.0 ruff==0.0.285 && \
     npm install --global prettier@2.5.1 globby@12.0.2 && \
     mkdir /app
 

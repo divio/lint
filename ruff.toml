@@ -12,6 +12,7 @@ select = [
     'UP',   # pyupgrade
     'YTT',  # flake8-2020 (usage of sys package)
     'S101', # assert used (ignored for tests, see below)
+    'S110', # try-except-pass detected, consider logging the exception
     'B',    # flake8-bugbear 
     # 'A', we often have models with id, list, etc.
     # 'COM', conflicts with black
@@ -32,13 +33,11 @@ select = [
     'PLW', # pylint ('W' subset)
     'FLY', # static join to f-string 
     'RUF', # ruff miscellanous lints
-
-
 ]
+
 exclude = ["/*with_errors*", "/**/.venv"]
 ignore = [
     "E501",    # line too long
-    "E722",    # bare except
     "E402",    # module level import not at top of file
     "B904",    # raise-without-from-inside-except
     "RET505",  # superfluous else return

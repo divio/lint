@@ -84,20 +84,15 @@ elif [[ -d "$LINT_FOLDER_PYTHON" && ! -d "$PREFIX$LINT_FOLDER_PYTHON" ]]
 then
       echo "$LINT_FOLDER_PYTHON directory not staged. Skipping..."
 else
-      echo "LINT: BLACK"
-      BLACK_OPTS=
-      if [ -n "${check}" ];  then
-            BLACK_OPTS=--check
-      fi
-      list_python_files | xargs -r black --line-length=79 --safe $BLACK_OPTS
-
       echo "LINT: RUFF"
-      ruff_args="--fix --show-fixes"
+      ruff_fmt=""
+      ruff_check="--fix --show-fixes"
       if [ -n "${check}" ];  then
-            ruff_args=""
-            echo "ruff auto-fix disabled."
+            ruff_fmt="--check"
+            ruff_check=""
       fi
-      ruff check $ruff_args "$PREFIX$LINT_FOLDER_PYTHON"
+      ruff format $ruff_fmt "$PREFIX$LINT_FOLDER_PYTHON"
+      ruff check $ruff_check "$PREFIX$LINT_FOLDER_PYTHON"
       echo "Success!"
 fi
 fi

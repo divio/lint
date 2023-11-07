@@ -45,6 +45,14 @@ ignore = [
     "RUF012",  # mutable class default
     "B017",    # pytest.raises exception considered evil
     "PT011",   # pytest.raises too broad
+
+    # conflicts with ruff formatter
+    "W191",
+    "E111",
+    "E114",
+    "E117",
+    "ISC001",
+    "ISC002",
 ]
 
 [per-file-ignores]

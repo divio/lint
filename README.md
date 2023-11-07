@@ -6,7 +6,7 @@ Docker-packaged linting tools with sensible defaults.
 
 - [Available linters](#available-linters)
 - [Usage](#usage)
-  * [Using it in bash](#using-it-in-bash)
+  * [Using it with bash](#using-it-with-bash)
   * [Using it with make](#using-it-with-make)
   * [Running from a pre-commit hook](#running-from-a-pre-commit-hook)
 - [Options](#options)
@@ -23,7 +23,7 @@ Docker-packaged linting tools with sensible defaults.
 The following linters are available:
 
 * `docker`: runs [hadolint](https://github.com/hadolint/hadolint)
-* `python`: runs [black](https://github.com/psf/black) and [ruff](https://github.com/astral-sh/ruff)
+* `python`: runs [ruff](https://github.com/astral-sh/ruff)
 * `scss`: runs [prettier](https://prettier.io/)
 * `js`: runs [prettier](https://prettier.io/)
 
@@ -32,7 +32,7 @@ which requires a manual setup (see [Ruff configuration](#ruff-configuration)).
 
 ## Usage
 
-### Using it in bash
+### Using it with bash
 
 Use the following:
 ```bash

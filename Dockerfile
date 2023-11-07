@@ -26,3 +26,9 @@ WORKDIR /app
 
 COPY lint /bin/lint
 COPY ruff.toml /presets/ruff.toml
+
+# Add safe.directory to git to make the --staged option work
+# Use --system so it applies to all users.
+# This can't be limited to /app since gitlab-ci mounts the workspace somewhere else
+# (see https://github.com/pypa/setuptools_scm/issues/797)
+RUN git config --system --add safe.directory '*'

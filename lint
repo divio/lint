@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -e
+set -eo pipefail
 
 check=
 staged=
@@ -59,7 +59,7 @@ function list_python_files() {
             -not -path '*with_errors*' \
             -not -path './.venv/*' \
             -name '*.py' \
-            -print
+            -print || echo ""
 }
 
 
@@ -67,9 +67,12 @@ if [ "$run" == "all" ] || includes "$run" "docker"; then
 if [ -z "$LINT_FILE_DOCKER" ]
 then
       echo "\$LINT_FILE_DOCKER is not set. Skipping..."
+elif [[ -f "$LINT_FILE_DOCKER" && ! -f "$PREFIX$LINT_FILE_DOCKER" ]]
+then
+      echo "$LINT_FILE_DOCKER not staged. Skipping..."
 else
       echo "LINT: DOCKER"
-      hadolint $LINT_FILE_DOCKER
+      hadolint $PREFIX$LINT_FILE_DOCKER
 fi
 fi
 
@@ -77,6 +80,9 @@ if [ "$run" == "all" ] || includes "$run" "python"; then
 if [ -z "$LINT_FOLDER_PYTHON" ]
 then
       echo "\$LINT_FOLDER_PYTHON is not set. Skipping..."
+elif [[ -d "$LINT_FOLDER_PYTHON" && ! -d "$PREFIX$LINT_FOLDER_PYTHON" ]]
+then
+      echo "$LINT_FOLDER_PYTHON directory not staged. Skipping..."
 else
       echo "LINT: BLACK"
       BLACK_OPTS=

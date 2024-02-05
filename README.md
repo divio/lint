@@ -24,8 +24,6 @@ The following linters are available:
 
 * `docker`: runs [hadolint](https://github.com/hadolint/hadolint)
 * `python`: runs [ruff](https://github.com/astral-sh/ruff)
-* `scss`: runs [prettier](https://prettier.io/)
-* `js`: runs [prettier](https://prettier.io/)
 
 Each tool is configured with sensible defaults adopted at [Divio](https://divio.com/), except ruff
 which requires a manual setup (see [Ruff configuration](#ruff-configuration)).

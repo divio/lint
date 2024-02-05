@@ -11,7 +11,7 @@ RUN export DISTRIB=$(case "$TARGETARCH" in amd64) echo "x86_64";; arm64) echo "a
 
 # update versions from https://pkgs.alpinelinux.org/packages
 # hadolint ignore=DL3018
-RUN apk add --no-cache npm python3 git gcc python3-dev musl-dev
+RUN apk add --no-cache python3 git gcc python3-dev musl-dev
 
 # hadolint ignore=DL3013
 RUN python3 -m ensurepip && \
@@ -19,7 +19,6 @@ RUN python3 -m ensurepip && \
     pip3 install --no-cache-dir --upgrade pip setuptools && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     pip install --no-cache-dir ruff==0.1.4 && \
-    npm install --global prettier@2.5.1 globby@12.0.2 && \
     mkdir /app
 
 WORKDIR /app

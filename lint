@@ -43,14 +43,6 @@ fi
 
 includes() { [ -z "$2" ] || { [ -z "${1##*$2*}" ] && [ -n "$1" ];};}
 
-# This piece of work is necessary because prettier fails if the patterns
-# that it receives as arguments do not match any files.
-function node_check_pattern () {
-      NODE_PATH=/usr/local/lib/node_modules/ \
-            node -e 'process.exit(!require("globby").sync(process.argv.slice(1)).length);' \
-                  "$@"
-}
-
 function list_python_files() {
     find "$PREFIX$LINT_FOLDER_PYTHON" \
         \( -name .tox -o -name .eggs \) -prune \
@@ -94,55 +86,5 @@ else
       ruff format $ruff_fmt "$PREFIX$LINT_FOLDER_PYTHON"
       ruff check $ruff_check "$PREFIX$LINT_FOLDER_PYTHON"
       echo "Success!"
-fi
-fi
-
-if [ "$run" == "all" ] || includes "$run" "scss"; then
-if [ -z "$LINT_FOLDER_SCSS" ]
-then
-      echo "\$LINT_FOLDER_SCSS is not set. Skipping..."
-elif node_check_pattern "$PREFIX$LINT_FOLDER_SCSS"; then
-      echo "LINT: PRETTIER: SCSS"
-      PRETTIER_OPTS=--write
-      if [ -n "${check}" ];  then
-            PRETTIER_OPTS=--check
-      fi
-      prettier \
-            --no-config \
-            --print-width=80 \
-            --tab-width=2 \
-            --arrow-parens=avoid \
-            --trailing-comma=es5 \
-            --single-quote \
-            --bracket-same-line \
-            $PRETTIER_OPTS \
-            "$PREFIX$LINT_FOLDER_SCSS"
-else
-      echo "$PREFIX$LINT_FOLDER_SCSS did not match any files, skipping..."
-fi
-fi
-
-if [ "$run" == "all" ] || includes "$run" "js"; then
-if [ -z "$LINT_FOLDER_JS" ]
-then
-      echo "\$LINT_FOLDER_JS is not set. Skipping..."
-elif node_check_pattern "$PREFIX$LINT_FOLDER_JS"; then
-      echo "LINT: PRETTIER: JS"
-      PRETTIER_OPTS=--write
-      if [ -n "${check}" ];  then
-            PRETTIER_OPTS=--check
-      fi
-      prettier \
-            --no-config \
-            --print-width=80 \
-            --tab-width=2 \
-            --arrow-parens=avoid \
-            --trailing-comma=es5 \
-            --single-quote \
-            --bracket-same-line \
-            $PRETTIER_OPTS \
-            "$PREFIX$LINT_FOLDER_JS"
-else
-      echo "$PREFIX$LINT_FOLDER_JS did not match any files, skipping..."
 fi
 fi

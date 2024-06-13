@@ -2,6 +2,7 @@ line-length = 79
 
 target-version = "py311" # Default python version
 
+[lint]
 # To test and work on: eradicate (ERA) - we need to work on it to be able to keep some comments.
 # To activate later: 'SIM', 'PTH', 'PLR', 'G', 'ARG', 'PLW2901'
 select = [
@@ -55,16 +56,17 @@ ignore = [
     "ISC002",
 ]
 
-[per-file-ignores]
+[lint.per-file-ignores]
 # The pre-file-ignores paths are resolved relative to
 # the location of ruff.toml!
 # See https://github.com/astral-sh/ruff/issues/6480
 "/**/test/**" = ["S101"]
 "/**/tests/**" = ["S101"]
 "/**/conftest.py" = ["S101"]
+"/**/pytest_plugin.py" = ["S101"]
 "/**/test_*.py" = ["S101"]
 
-[isort]
+[lint.isort]
 lines-after-imports = 2
 lines-between-types = 0
 section-order = [
@@ -82,7 +84,7 @@ section-order = [
 ]
 known-first-party = ["conftest", "test_utils", "version"] # Control Panel
 
-[isort.sections]
+[lint.isort.sections]
 django = ["django", "django_extensions"]
 drf = ["rest_framework"]
 aws = ["boto3", "botocore"]

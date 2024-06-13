@@ -8,12 +8,12 @@ ARG RUFF_VERSION=0.4.8
 # allow the install without a virtualenv
 ENV PIP_BREAK_SYSTEM_PACKAGES=1
 
-# hadolint ignore=SC2086
+# hadolint ignore=SC2086,DL3018
 RUN export DISTRIB=$(case "$TARGETARCH" in amd64) echo "x86_64";; arm64) echo "arm64";; *) echo "Unsupported architecture $TARGETARCH" && exit 1;; esac) && \
   wget -q https://github.com/hadolint/hadolint/releases/download/${HADOLINT_VERSION}/hadolint-Linux-$DISTRIB -O /bin/hadolint && \
   chmod 777 /bin/hadolint && \
   apk add --no-cache git python3 py3-pip && \
-  pip install --no-cache-dir ruff && \
+  pip install --no-cache-dir ruff==${RUFF_VERSION} && \
   mkdir /app
 
 # Add safe.directory to git to make the --staged option work \

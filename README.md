@@ -40,8 +40,10 @@ alias lint="docker run --rm -it --env-file=.lint -v $(pwd):/app divio/lint /bin/
 lint
 # Only check, do not fix
 lint --check
-# Run only js and python linters
-lint --run=js,python
+# Apply unsafe fixes (python/ruff only)
+make lint --unsafe-fixes
+# Only run hadolint
+make --run=docker
 ```
 
 For an example of `.lint` file, see [Environment variables](#environment-variables).
@@ -58,8 +60,10 @@ lint:
 make lint
 # Only check, do not fix
 make lint ARGS=--check
-# Lint only js and scss linters
-make lint ARGS="--run=js,scss"
+# Apply unsafe fixes (python/ruff only)
+make lint ARGS="--unsafe-fixes"
+# Only run hadolint
+make lint ARGS="--run=docker"
 ```
 
 For an example of `.lint` file, see [Environment variables](#environment-variables).
@@ -67,7 +71,7 @@ For an example of `.lint` file, see [Environment variables](#environment-variabl
 ### Running from a pre-commit hook
 
 If the container is invoked with `--staged`, it will only run on files
-that are staged for commit. This implies `--check`, because it needs to
+that are staged for commit. This implies `--check` because it needs to
 operate on temporary copies of the affected files since the working tree
 might contain further changes not staged for commit. This is a faster
 version suitable for running from a pre-commit hook.
@@ -97,7 +101,7 @@ The following options are available for the `/bin/lint` script:
 * `-c / --check`: only check compliance, do not automatically fix errors
 * `--staged`: only run against files staged for commit, useful for pre-commit hooks. Note that it
   implies `--check`.
-* `--run`: only run a subset of linters. `--run=all` is equivalent to `--run=python,js,docker,scss`.
+* `--run`: only run a subset of linters. `--run=all` is equivalent to `--run=python,docker`.
 
 ## Ruff configuration
 
@@ -118,7 +122,7 @@ Here is an example of a valid isort configuration you could use:
 [tool.ruff]
    # ...
 
-    [tool.ruff.isort]
+    [tool.ruff.lint.isort]
         # keep thos defaults
         lines-after-imports = 2
         lines-between-types = 0
@@ -126,7 +130,7 @@ Here is an example of a valid isort configuration you could use:
         section-order = ["future", "standard-library", "django", "drf", "third-party", "first-party", "project", "local-folder"]
 
     # define the sections used in the section-order
-    [tool.ruff.isort.sections]
+    [tool.ruff.lint.isort.sections]
         django = ["django"]
         drf=["rest_framework"]
         project=["my_project", "accounts"]
